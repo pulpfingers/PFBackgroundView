@@ -1,9 +1,9 @@
 //
-//  UACellBackgroundView.m
-//  Ambiance
+//  PFBackgroundView.m
+//  Pulpfingers
 //
-//  Created by Matt Coneybeare on 1/31/10.
-//  Copyright 2010 Urban Apps LLC. All rights reserved.
+//  Created by David Charlec & Jerome Scheer on 08/26/2011
+//  Copyright 2011 Pulpfingers. All rights reserved.
 //
 
 #import "PFBackgroundView.h"
@@ -11,21 +11,20 @@
 @implementation PFBackgroundView
 
 @synthesize style;
-//@synthesize gradient;
-@synthesize strokeColor;
-@synthesize strokeWidth;
+@synthesize radius;
+@synthesize thumbnail;
 
 - (id)init {
     self = [super init];
     if (self) {
         bgColor = [[UIColor whiteColor] retain];
-        self.strokeColor = [UIColor grayColor];
-        self.strokeWidth = 3.0f;
+        [self setRadius:12];
+        self.style = PFBackgroundViewStyleRectangle;
     }
     return self;
 }
 
-- (BOOL) isOpaque {
+- (BOOL)isOpaque {
     return NO;
 }
 
@@ -35,18 +34,17 @@
 }
 
 -(void)drawRect:(CGRect)aRect {
+    [super drawRect:aRect];
     // Drawing code
         
     CGContextRef context = UIGraphicsGetCurrentContext();
+
     CGContextSetAllowsAntialiasing(context, YES);
     CGContextSetShouldAntialias(context, YES);
 
-    CGContextSetLineWidth(context, strokeWidth);
-    CGContextSetStrokeColorWithColor(context, strokeColor.CGColor);
     CGContextSetFillColorWithColor(context, bgColor.CGColor);
     
     CGRect rrect = self.bounds;
-            
     CGFloat minx = CGRectGetMinX(rrect);
     CGFloat midx = CGRectGetMidX(rrect);
     CGFloat maxx = CGRectGetMaxX(rrect);
@@ -54,12 +52,7 @@
     CGFloat miny = CGRectGetMinY(rrect);
     CGFloat midy = CGRectGetMidY(rrect);
     CGFloat maxy = CGRectGetMaxY(rrect);
-    
-    miny++;
-    minx++;
-    maxx--;
-    maxy--;
-    
+        
     CGFloat topRadius = 10.0;
     CGFloat bottomRadius = 10.0;
     
@@ -68,6 +61,7 @@
         bottomRadius = 0.0f;	
         
     } else if (style == PFBackgroundViewStyleBottomRounded) {
+        NSLog(@"BOBBOM");
 
         topRadius = 0.0f;
         
@@ -77,17 +71,22 @@
         bottomRadius = 0.0f;
 		
     } 
-
+    
+    CGContextBeginPath(context);
     CGContextMoveToPoint(context, minx, midy);
     
     CGContextAddArcToPoint(context, minx, miny, midx, miny, topRadius);
     CGContextAddArcToPoint(context, maxx, miny, maxx, midy, topRadius);
     CGContextAddArcToPoint(context, maxx, maxy, midx, maxy, bottomRadius);
     CGContextAddArcToPoint(context, minx, maxy, minx, midy, bottomRadius);
-
-    CGContextClosePath(context);
-    CGContextDrawPath(context, kCGPathFillStroke);
-
+    
+    CGContextClip(context);
+    
+    CGContextFillRect(context, self.bounds);
+    if(self.thumbnail) {
+        [self.thumbnail.image drawInRect:self.thumbnail.frame];
+    }
+    
     return;
 }
 
@@ -95,8 +94,8 @@
     [super dealloc];
 }
 
-- (void)setStyle:(PFBackgroundViewStyle)newPosition {
-    style = newPosition;
+- (void)setStyle:(PFBackgroundViewStyle)newStyle {
+    style = newStyle;
     [self setNeedsDisplay];
 }
 
@@ -110,6 +109,5 @@
     [tempArray addObject:dictionary];
     borders = tempArray;
 }
-
 
 @end

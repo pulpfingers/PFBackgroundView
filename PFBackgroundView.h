@@ -29,16 +29,12 @@ typedef enum  {
 @interface PFBackgroundView : UIView {
     PFBackgroundViewStyle style;    
     UIColor *bgColor;
-    UIColor *innerBorderColor;
-    CGFloat innerBorderWidth;
-    NSArray *borders;
+    NSArray *borders;    
 }
 
 @property(nonatomic) PFBackgroundViewStyle style;
-@property(nonatomic, retain) UIColor *strokeColor;
-@property(nonatomic) CGFloat strokeWidth;
-@property(nonatomic, retain) UIImage *image;
-//@property(nonatomic) CGGradient gradient;
+@property(nonatomic) NSInteger radius;
+@property(nonatomic, retain) UIImageView *thumbnail;
 
 - (void)setBorderWithStyle:(PFBackgroundViewBorderStyle)borderStyle color:(UIColor *)color width:(CGFloat)width;
                              
