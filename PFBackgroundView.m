@@ -52,7 +52,12 @@
     CGFloat miny = CGRectGetMinY(rrect);
     CGFloat midy = CGRectGetMidY(rrect);
     CGFloat maxy = CGRectGetMaxY(rrect);
-        
+    
+    minx++;
+    maxx--;
+//    miny++;
+    maxy--;
+    
     CGFloat topRadius = 10.0;
     CGFloat bottomRadius = 10.0;
     
